@@ -18,7 +18,7 @@
       if
       message.tags
       %}
-      class="  alert-dismissible fade show alert alert-{{message.tags}}"
+      class="  text-center bold alert alert-{{message.tags}}"
       {%
       endif
       %}
@@ -26,7 +26,7 @@
       {{message}}
     </div>
     {% endfor %} {% endif %}
-    <h1 class="text-center mt-3">Extract Table Data from pdf</h1>
+    <h1 class="text-center mt-3 text-{{class}}">{{title}}</h1>
 
     <form
       action=""
@@ -41,8 +41,14 @@
       </div>
     </form>
     <div class="text-center">
-      <a href="{% url  'comp' %}" class="btn btn-sm mt-5 btn-primary">
+      <a href="{% url  'comp' %}" class="btn btn-sm mt-5 btn-success">
         Complex format</a
+      >
+      <a href="{% url  'home' %}" class="btn btn-sm mt-5 btn-primary">
+        Simple format</a
+      >
+      <a href="{% url  'extract_text' %}" class="btn btn-sm mt-5 btn-warning">
+        Extract Text</a
       >
     </div>
     <script

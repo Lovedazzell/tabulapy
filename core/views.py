@@ -2,9 +2,8 @@ from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
 from . forms import PdfReceiver
 import tabula
-import tempfile
+import pdfplumber
 from . models import DataTable , CompTable
-import os
 from django.contrib import messages
 # Create your views here.
 
@@ -23,13 +22,13 @@ def home(request):
                 messages.success(request,'File saves successfully')
             except Exception as e:
                 print("Error:============",e)
-                messages.error(request,'Something went Wrong')
+                messages.warning(request,'Something went Wrong')
 
             return HttpResponseRedirect('/')
     else:
         form = PdfReceiver()
     
-    context = {'form': form}
+    context = {'form': form,'title':'Extract Table Data from pdf','class':'primary'}
     return render(request, 'core/home.html', context)
 
 # Complex Layout
@@ -69,5 +68,30 @@ def comp(request):
     else:
         form = PdfReceiver()
     
-    context = {'form': form}
-    return render(request, 'core/comp.html', context)
+    context = {'form': form,'title':'Extract Complex layout Table Data from pdf','class':'success'}
+    return render(request, 'core/home.html', context)
+
+
+def extract_text(request):
+    if request.method == 'POST':
+        print('POST ===============')
+        form = PdfReceiver(request.POST, request.FILES)
+        if form.is_valid():
+            file = request.FILES['data']
+            
+            with pdfplumber.open(file) as pdf:
+                # Extract text from each page of the PDF
+                extracted_text = []
+                for page in pdf.pages:
+                    extracted_text.append(page.extract_text())
+
+            # Join the extracted text from all pages
+            print(extract_text)
+            full_text = "\n".join(extracted_text)
+
+            return HttpResponse(full_text)
+    else:
+        form = PdfReceiver()
+    context = {'form': form,'title':'Extract Text from PDF','class':'warning'}
+    return render(request, 'core/home.html', context)
+
