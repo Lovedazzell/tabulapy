@@ -10,7 +10,9 @@ class AdminCompTable(admin.ModelAdmin):
 
 @admin.register(CompTable)
 class AdminCompTable(admin.ModelAdmin):
-    list_display = [  'service_center', 'fresh' , 'overall_conversion', 'rvp_done', 'eds', 'eds_conversion','rvp' ]
+    list_display = [  'order_number', 'order_time' , 'trade_no', 'trade_time', 
+    'security_description' , 'buy_or_sell', 'quantity', 'gross_rate', 'brokage',
+    'closing_rate', 'net_total', 'remarks' ]
 
 
 

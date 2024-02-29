@@ -41,15 +41,24 @@ def comp(request):
             file = request.FILES['data']
             
             try:
-                tables = tabula.read_pdf(file, pages='all',multiple_tables=True)
-               
+                tables = tabula.read_pdf(file, pages='all',stream=True,multiple_tables=True,pandas_options={'header': None})
+                
+                # getting table 3 data
+                for index, row in tables[3].iterrows():
+          
+                    if len(str(row[0])) > 5:
 
-                for index, row in tables[0].iterrows():
-                    if row[0] == 'OUTSCAN Performance' or  row[0] == 'Service Centre' or index + 1 == len(tables[0]):
-                        continue
-                    
-                    dt = CompTable(service_center = row[0] , fresh = row[1], overall_conversion = row[2] , rvp_done = row[3] , eds = row[4] , eds_conversion = row[5],rvp = row[6]  )
-                    dt.save()
+                        # Saving to data base
+                        dt = CompTable(order_number = row[0] , order_time = row[1], trade_no = row[2] , trade_time = str(row[3])[:9], security_description = str(row[3])[8:] , buy_or_sell = row[4],quantity = row[5] , gross_rate =  row[6] ,brokage=  '' , net_rate =  row[7] , closing_rate =  '' , net_total =  row[8]  , remarks = ''  )
+                        dt.save()
+
+                # getting table 4 data
+                for index, row in tables[4].iterrows():
+                    if len(str(row[0])) > 5:
+
+                        # Saving to data base
+                        dt = CompTable(order_number = row[0] , order_time = row[1], trade_no = row[2] , trade_time = str(row[3])[:9], security_description = str(row[3])[8:] , buy_or_sell = row[4],quantity = row[5] , gross_rate =  row[6] ,brokage=  '' , net_rate =  row[7] , closing_rate =  '' , net_total =  row[8]  , remarks = ''  )
+                        dt.save()
                     
                 messages.success(request,'File saves successfully')
             except Exception as e:
